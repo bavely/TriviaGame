@@ -6,7 +6,7 @@
 	var counter;
 
 function start(){
-	counter=10;
+	counter=100;
 	rightAnswers=0;
 	wrongAnswers=0;
 	 var startBtn = $("<button>");
@@ -90,13 +90,13 @@ start();
 
 	function question(){
 	for (var i = 0; i < questions.length; i++) {
-		$("#mainDiv").append("<br>"+questions[i].Q);
+		$("#mainDiv").append("<br> <h4>"+questions[i].Q + "<br>");
 
 		for (var j = 0; j < questions[i].A.length; j++) {
 			
-		selectAnswers = $("<a href=#>");
+		selectAnswers = $("<label> ");
 		selectAnswers.addClass("ans");
-		selectAnswers.html("<br>"+questions[i].A[j]);
+		selectAnswers.html("<br> <input type='checkbox'> "+ questions[i].A[j] + "<br>");
 		$("#mainDiv").append(selectAnswers);
 
 		if ((i===0 && j===3) || (i===1 && j===2) ||(i===2 && j===1)){
@@ -142,7 +142,7 @@ start();
 	$(".done").click(function(){
 		stop();
 		$("#countDiv").empty();
-		$("#mainDiv").html("<br>the result<br>The Right Answers = "+rightAnswers+"<br>The Wrong Answers = "+wrongAnswers);
+		$("#mainDiv").html(" <br><h2>The result<br><h4>The Right Answers = "+ rightAnswers +" <br><h4>The Wrong Answers = "+wrongAnswers);
 
 		var startNew = $("<button>");
 		startNew.html("Start New Quiz!");

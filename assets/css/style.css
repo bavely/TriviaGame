@@ -1,5 +1,25 @@
-.new, .done {
+.new {
 
 	position: relative;;
 	top: 50px;
 }
+
+.done {
+
+	position: relative;
+	right: 242px;
+	top:60px;
+}
+
+
+label {
+
+    margin-left: 5px;
+    margin-bottom: 34px;
+    margin-top: -12px;
+}
+
+#mainDiv{
+	text-align: center;
+}
+
