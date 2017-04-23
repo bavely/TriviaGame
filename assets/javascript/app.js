@@ -56,7 +56,7 @@ start();
 
 	counter--;
 
-	$("#countDiv").html(counter);
+	$("#countDiv").html("<h4> Time Remaining : "+counter+" Seconds");
 
 	if (counter === 0) {
 
@@ -96,7 +96,7 @@ start();
 			
 		selectAnswers = $("<label> ");
 		selectAnswers.addClass("ans");
-		selectAnswers.html("<br> <input type='checkbox'> "+ questions[i].A[j] + "<br>");
+		selectAnswers.html("<br> <input type='checkbox'> "+ questions[i].A[j]);
 		$("#mainDiv").append(selectAnswers);
 
 		if ((i===0 && j===3) || (i===1 && j===2) ||(i===2 && j===1)){
