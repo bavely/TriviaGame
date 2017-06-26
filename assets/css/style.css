@@ -1,29 +1,66 @@
-.new {
-
-	position: relative;;
-	top: 50px;
+html,
+body {
+  height: 100%;
 }
 
-.done {
-
-	position: relative;
-	right: 242px;
-	top:60px;
+body {
+  text-align: center;
+  background-image: url("../images/tacky.jpg");
 }
 
-
-label {
-
-    margin-left: 5px;
-    margin-bottom: 34px;
-    margin-top: -12px;
+#wrapper {
+  width: 960px;
+  height: 95%;
+  box-sizing: border-box;
+  margin: 2.5% auto;
+  background-color: #fff17a;
 }
 
-#mainDiv{
-	text-align: center;
+#sub-wrapper {
+  position: relative;
+  top: 15%;
 }
 
-#countDiv{
+button {
+  display: block;
+  width: 50%;
+  height: 20%;
+  margin: 0 auto;
+  font-size: 42px;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
 
-	text-align: center;
+img {
+  height: 200px;
+}
+
+h1 {
+  padding-top: 2.5%;
+  font-family: Geo, sans-serif;
+  font-size: 6.5em;
+  font-weight: bold;
+  color: blue;
+}
+
+h2 {
+  margin-bottom: 25px;
+  font-size: 35px;
+}
+
+h3 {
+  margin-bottom: 10px;
+  font-size: 25px;
+}
+
+#start {
+  margin-top: 10%;
+  background: pink;
+  border: 2px solid blue;
+}
+
+button:hover {
+  background: pink;
+  border: 2px solid blue;
 }

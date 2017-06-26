@@ -1,165 +1,186 @@
 
-	$(document).ready(function() {
+var panel = $("#quiz-area");
+var countStartNumber = 30;
 
-	var rightAnswers;
-	var wrongAnswers;
-	var counter;
+// Question set
+var questions = [{
+  question: "What was the first full length CGI movie?",
+  answers: ["A Bug's Life", "Monsters Inc.", "Toy Story", "The Lion King"],
+  correctAnswer: "Toy Story",
+  image: "assets/images/toystory.gif"
+}, {
+  question: "Which of these is NOT a name of one of the Spice Girls?",
+  answers: ["Sporty Spice", "Fred Spice", "Scary Spice", "Posh Spice"],
+  correctAnswer: "Fred Spice",
+  image: "assets/images/spicegirls.gif"
+}, {
+  question: "Which NBA team won the most titles in the 90s?",
+  answers: ["New York Knicks", "Portland Trailblazers", "Los Angeles Lakers", "Chicago Bulls"],
+  correctAnswer: "Chicago Bulls",
+  image: "assets/images/bulls.gif"
+}, {
+  question: "Which group released the hit song, 'Smells Like Teen Spirit'?",
+  answers: ["Nirvana", "Backstreet Boys", "The Offspring", "No Doubt"],
+  correctAnswer: "Nirvana",
+  image: "assets/images/nirvanabark.gif"
+}, {
+  question: "Which popular Disney movie featured the song, \"Circle of Life\"?",
+  answers: ["Aladdin", "Hercules", "Mulan", "The Lion King"],
+  correctAnswer: "The Lion King",
+  image: "assets/images/lionking.gif"
+}, {
+  question: "Finish this line from the Fresh Prince of Bel-Air theme song: \"I whistled for a cab and when it came near, the license plate said...\"",
+  answers: ["Dice", "Mirror", "Fresh", "Cab"],
+  correctAnswer: "Fresh",
+  image: "assets/images/fresh.gif"
+}, {
+  question: "What was Doug's best friend's name?",
+  answers: ["Skeeter", "Mark", "Zach", "Cody"],
+  correctAnswer: "Skeeter",
+  image: "assets/images/skeeter.gif"
+}, {
+  question: "What was the name of the principal at Bayside High in Saved By The Bell?",
+  answers: ["Mr.Zhou", "Mr.Driggers", "Mr.Belding", "Mr.Page"],
+  correctAnswer: "Mr.Belding",
+  image: "assets/images/belding.gif"
+}];
 
-function start(){
-	counter=100;
-	rightAnswers=0;
-	wrongAnswers=0;
-	 var startBtn = $("<button>");
-	 startBtn.addClass("btn btn-primary")
-	 $("#countDiv").html(startBtn);
-	startBtn.html("Start Game!");
+// Variable to hold our setInterval
+var timer;
 
-		// click on "Start Game!" button.
-	 startBtn.click(function(){
-	
-		startCount();
-		question();
+var game = {
 
-	 });
-	 }
+  questions: questions,
+  currentQuestion: 0,
+  counter: countStartNumber,
+  correct: 0,
+  incorrect: 0,
 
-start();
+  countdown: function() {
+    game.counter--;
+    $("#counter-number").html(game.counter);
+    if (game.counter === 0) {
+      console.log("TIME UP");
+      game.timeUp();
+    }
+  },
 
-	// Questions and Answers Obj.
-	var  questions =  [{
+  loadQuestion: function() {
 
-	Q:"1. Who was the president of the United States during the American civil war?",
-	A: ["a. Andrew Johnson","b. James Buchanan","c. Hannibal Hamlin","d. Abraham Lincoln"]
-	},
+    timer = setInterval(game.countdown, 1000);
 
-	{
-	Q:"2. In 1995, how much was a first-class stamp in the United States?",
-	A: ["a. 42 cents","b. 12 cents","c. 32 cents","d. 22 cents"]
-	},
+    panel.html("<h2>" + questions[this.currentQuestion].question + "</h2>");
 
-	{
-	Q:"3. What piece of land did the United Kingdom handover to China in 1997?",
-	A: ["a. Singapore","b. Hong Kong","c. The Seychelles","d. The Falklands"]
+    for (var i = 0; i < questions[this.currentQuestion].answers.length; i++) {
+      panel.append("<button class='answer-button' id='button' data-name='" + questions[this.currentQuestion].answers[i]
+      + "'>" + questions[this.currentQuestion].answers[i] + "</button>");
+    }
+  },
 
-	}];
+  nextQuestion: function() {
+    game.counter = countStartNumber;
+    $("#counter-number").html(game.counter);
+    game.currentQuestion++;
+    game.loadQuestion();
+  },
 
+  timeUp: function() {
 
+    clearInterval(timer);
 
-	
-	var interval;
-	// Count dawn timer.
-	function startCount(){
-	interval=setInterval(countDawn, 1000);
-	console.log(interval);
-	}
-	function countDawn(){
+    $("#counter-number").html(game.counter);
 
-	counter--;
+    panel.html("<h2>Out of Time!</h2>");
+    panel.append("<h3>The Correct Answer was: " + questions[this.currentQuestion].correctAnswer);
+    panel.append("<img src='" + questions[this.currentQuestion].image + "' />");
 
-	$("#countDiv").html("<h4> Time Remaining : "+counter+" Seconds");
+    if (game.currentQuestion === questions.length - 1) {
+      setTimeout(game.results, 3 * 1000);
+    }
+    else {
+      setTimeout(game.nextQuestion, 3 * 1000);
+    }
+  },
 
-	if (counter === 0) {
+  results: function() {
 
-	$("#countDiv").html("<br>Time out!");
-	$("#mainDiv").html("<br>the result<br>The Right Answers = "+rightAnswers+"<br>The Wrong Answers = "+wrongAnswers);
-	
-		stop();
+    clearInterval(timer);
 
-		var startNew = $("<button>");
-		startNew.html("Start New Quiz!");
-		startNew.addClass("new btn btn-primary");
-		$("#mainDiv").append(startNew);
+    panel.html("<h2>All done, heres how you did!</h2>");
 
-		$(".new").click(function(){
+    $("#counter-number").html(game.counter);
 
+    panel.append("<h3>Correct Answers: " + game.correct + "</h3>");
+    panel.append("<h3>Incorrect Answers: " + game.incorrect + "</h3>");
+    panel.append("<h3>Unanswered: " + (questions.length - (game.incorrect + game.correct)) + "</h3>");
+    panel.append("<br><button id='start-over'>Start Over?</button>");
+  },
 
-			start();
-			$("#mainDiv").empty();
+  clicked: function(e) {
+    clearInterval(timer);
+    if ($(e.target).attr("data-name") === questions[this.currentQuestion].correctAnswer) {
+      this.answeredCorrectly();
+    }
+    else {
+      this.answeredIncorrectly();
+    }
+  },
 
-		});
-		  
-	}
-}
-	
+  answeredIncorrectly: function() {
 
-	function stop() { 
+    game.incorrect++;
 
-	clearInterval(interval);
+    clearInterval(timer);
 
-	}
+    panel.html("<h2>Nope!</h2>");
+    panel.append("<h3>The Correct Answer was: " + questions[game.currentQuestion].correctAnswer + "</h3>");
+    panel.append("<img src='" + questions[game.currentQuestion].image + "' />");
 
-	function question(){
-	for (var i = 0; i < questions.length; i++) {
-		$("#mainDiv").append("<br> <h4>"+questions[i].Q + "<br>");
+    if (game.currentQuestion === questions.length - 1) {
+      setTimeout(game.results, 3 * 1000);
+    }
+    else {
+      setTimeout(game.nextQuestion, 3 * 1000);
+    }
+  },
 
-		for (var j = 0; j < questions[i].A.length; j++) {
-			
-		selectAnswers = $("<label> ");
-		selectAnswers.addClass("ans");
-		selectAnswers.html("<br> <input type='checkbox'> "+ questions[i].A[j]);
-		$("#mainDiv").append(selectAnswers);
+  answeredCorrectly: function() {
 
-		if ((i===0 && j===3) || (i===1 && j===2) ||(i===2 && j===1)){
+    clearInterval(timer);
 
-	selectAnswers.attr("Answer","right");
+    game.correct++;
 
-	}
-	else{
-	selectAnswers.attr("Answer","wrong");
-	}
-		}
-	}
+    panel.html("<h2>Correct!</h2>");
+    panel.append("<img src='" + questions[game.currentQuestion].image + "' />");
 
-	$(".ans").click(function(){
+    if (game.currentQuestion === questions.length - 1) {
+      setTimeout(game.results, 3 * 1000);
+    }
+    else {
+      setTimeout(game.nextQuestion, 3 * 1000);
+    }
+  },
 
-	var ansDetector = $(this).attr("Answer");
+  reset: function() {
+    this.currentQuestion = 0;
+    this.counter = countStartNumber;
+    this.correct = 0;
+    this.incorrect = 0;
+    this.loadQuestion();
+  }
+};
 
-	console.log(ansDetector);
+// CLICK EVENTS
 
-	if (ansDetector==="right"){
+$(document).on("click", "#start-over", function() {
+  game.reset();
+});
 
-		rightAnswers++;
-	
+$(document).on("click", ".answer-button", function(e) {
+  game.clicked(e);
+});
 
-	}
-
-
-	if (ansDetector==="wrong"){
-
-		wrongAnswers++;
-
-	}
-
-
-
-	});
-
-	var doneBtn = $("<button>");
-	doneBtn.html("Done");
-	doneBtn.addClass("done btn btn-primary");
-	$("#mainDiv").append(doneBtn);
-
-	$(".done").click(function(){
-		stop();
-		$("#countDiv").empty();
-		$("#mainDiv").html(" <br><h2>The result<br><h4>The Right Answers = "+ rightAnswers +" <br><h4>The Wrong Answers = "+wrongAnswers);
-
-		var startNew = $("<button>");
-		startNew.html("Start New Quiz!");
-		startNew.addClass("new btn btn-primary");
-		$("#mainDiv").append(startNew);
-
-		$(".new").click(function(){
-
-			start();
-			$("#mainDiv").empty();
-
-		});
-	});
-
-	
-}
-
-
-
+$(document).on("click", "#start", function() {
+  $("#sub-wrapper").prepend("<h2>Time Remaining: <span id='counter-number'>30</span> Seconds</h2>");
+  game.loadQuestion();
 });
